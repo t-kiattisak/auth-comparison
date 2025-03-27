@@ -15,7 +15,7 @@ type AuthService interface {
 	Login(username, password string) (TokenPair, error)
 	ValidateToken(token string) (User, error)
 	RefreshToken(refreshToken string) (string, error)
-	Logout(userID string) error
+	Logout(userID int) error
 	GenerateAccessToken(user User) (string, error)
 	Register(username, password string) error
 	ValidateUsername(username string) error
@@ -24,8 +24,8 @@ type AuthService interface {
 type AuthRepository interface {
 	GetUserByUsername(username string) (User, error)
 	GetUserByID(userID string) (User, error)
-	UpsertSession(userID string, refreshToken string, expiresAt int64) error
+	UpsertSession(userID int, refreshToken string, expiresAt int64) error
 	GetSessionByRefreshToken(token string) (AuthSession, error)
-	DeleteSessionByUserID(userID string) error
+	DeleteSessionByUserID(userID int) error
 	CreateUser(user User) error
 }

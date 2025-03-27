@@ -23,7 +23,7 @@ func (r *authRepository) GetUserByID(userID string) (domain.User, error) {
 	return user, nil
 }
 
-func (r *authRepository) DeleteSessionByUserID(userID string) error {
+func (r *authRepository) DeleteSessionByUserID(userID int) error {
 	_, err := r.db.Exec("DELETE FROM auth_sessions WHERE user_id = $1", userID)
 	return err
 }
@@ -48,7 +48,7 @@ func (r *authRepository) GetUserByUsername(username string) (domain.User, error)
 	return user, nil
 }
 
-func (r *authRepository) UpsertSession(userID string, refreshToken string, expiresAt int64) error {
+func (r *authRepository) UpsertSession(userID int, refreshToken string, expiresAt int64) error {
 	_, err := r.db.Exec(`
 		INSERT INTO auth_sessions (user_id, refresh_token, expires_at)
 		VALUES ($1, $2, $3)

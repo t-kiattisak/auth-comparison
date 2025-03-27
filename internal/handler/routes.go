@@ -25,20 +25,7 @@ func RegisterRoutes(app *fiber.App) {
 	app.Post("/refresh-jwt", h.Refresh)
 	app.Post("/logout-jwt", middleware.JWTAuth("mysecretkey", authService), h.Logout)
 	app.Post("/register-jwt", h.Register)
-	app.Post("/login-jwt", func(c *fiber.Ctx) error {
-		var creds struct {
-			Username string `json:"username"`
-			Password string `json:"password"`
-		}
-		if err := c.BodyParser(&creds); err != nil {
-			return err
-		}
-		token, err := jwtAuthService.Login(creds.Username, creds.Password)
-		if err != nil {
-			return c.Status(401).JSON(fiber.Map{"error": "unauthorized"})
-		}
-		return c.JSON(fiber.Map{"token": token})
-	})
+	app.Post("/login-jwt", h.Login)
 
 	app.Post("/login", func(c *fiber.Ctx) error {
 		var creds struct {

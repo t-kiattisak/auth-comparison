@@ -65,7 +65,7 @@ func (s *authService) ValidateToken(tokenStr string) (domain.User, error) {
 		return domain.User{}, errors.New("invalid token claims")
 	}
 	return domain.User{
-		ID:       claims["user_id"].(string),
+		ID:       claims["user_id"].(int),
 		Username: claims["username"].(string),
 	}, nil
 }
@@ -94,7 +94,7 @@ func (s *authService) RefreshToken(refreshToken string) (string, error) {
 	return s.GenerateAccessToken(user)
 }
 
-func (s *authService) Logout(userID string) error {
+func (s *authService) Logout(userID int) error {
 	return s.repo.DeleteSessionByUserID(userID)
 }
 
