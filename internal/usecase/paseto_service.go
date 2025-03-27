@@ -16,7 +16,7 @@ type pasetoService struct {
 	expiration time.Duration
 }
 
-func NewPasetoService(secretKey []byte) domain.AuthService {
+func NewPasetoService(secretKey []byte) domain.UserService {
 	return &pasetoService{
 		paseto:     paseto.NewV2(),
 		secretKey:  secretKey,

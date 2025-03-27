@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func JWTFromCookie(authService domain.AuthService) fiber.Handler {
+func JWTFromCookie(authService domain.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		token := c.Cookies("token")
 		if token == "" {

@@ -2,8 +2,11 @@ package handler
 
 import (
 	"auth-comparison/internal/domain"
+	"auth-comparison/internal/infrastructure"
 	"auth-comparison/internal/middleware"
+	"auth-comparison/internal/repository"
 	"auth-comparison/internal/usecase"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -14,6 +17,28 @@ func RegisterRoutes(app *fiber.App) {
 	pasetoService := usecase.NewPasetoService([]byte("supersecretkey1234567890123456"))
 	sessionStore := session.New()
 	sessionService := usecase.NewSessionService(sessionStore)
+
+	db := infrastructure.NewPostgresDB()
+	repo := repository.NewAuthRepository(db)
+	authService := usecase.NewAuthService(repo, "mysecretkey", time.Minute*15)
+	h := NewAuthHandler(authService)
+	app.Post("/refresh-jwt", h.Refresh)
+	app.Post("/logout-jwt", middleware.JWTAuth("mysecretkey", authService), h.Logout)
+	app.Post("/register-jwt", h.Register)
+	app.Post("/login-jwt", func(c *fiber.Ctx) error {
+		var creds struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		}
+		if err := c.BodyParser(&creds); err != nil {
+			return err
+		}
+		token, err := jwtAuthService.Login(creds.Username, creds.Password)
+		if err != nil {
+			return c.Status(401).JSON(fiber.Map{"error": "unauthorized"})
+		}
+		return c.JSON(fiber.Map{"token": token})
+	})
 
 	app.Post("/login", func(c *fiber.Ctx) error {
 		var creds struct {

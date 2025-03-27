@@ -6,7 +6,7 @@ type User struct {
 	Password string
 }
 
-type AuthService interface {
+type UserService interface {
 	Login(username, password string) (string, error)
 	ValidateToken(token string) (User, error)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func JWTMiddleware(authService domain.AuthService) fiber.Handler {
+func JWTMiddleware(authService domain.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		header := c.Get("Authorization")
 		if len(header) < 8 || header[:7] != "Bearer " {

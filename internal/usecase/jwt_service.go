@@ -12,7 +12,7 @@ type jwtService struct {
 	secretKey string
 }
 
-func NewJWTService(secret string) domain.AuthService {
+func NewJWTService(secret string) domain.UserService {
 	return &jwtService{secretKey: secret}
 }
 
